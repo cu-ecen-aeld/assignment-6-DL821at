@@ -2,9 +2,9 @@
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda2f7b4f302"
 
-# TODO: Set this  with the path to your assignments rep.  Use ssh protocol and see lecture notes
-# about how to setup ssh-agent for passwordless access
-SRC_URI = "ssh://git@github.com/cu-ecen-aeld/assignments-3-and-later-DL821at.git;branch=master"
+# TODO: Set this  with the path to your assignments rep.
+# Use ssh protocol and see lecture notes about how to setup ssh-agent for passwordless access
+SRC_URI = "git://git@github.com/cu-ecen-aeld/assignments-3-and-later-DL821at.git;protocol=ssh;branch=master"
 
 PV = "1.0+git${SRCPV}"
 # TODO: set to reference a specific commit hash in your assignment repo
@@ -52,4 +52,8 @@ do_install () {
 	# Install the start-stop script for the AESD socket server and rename it to "aesdsocket"
 	# so that it is recognized as the init script for the service.
 	install -m 0755 ${S}/aesdsocket-start-stop.sh ${D}${sysconfdir}/init.d/aesdsocket
+
+	# Create the rcS.d directory and add a symlink for automatic service startup at boot
+	install -d ${D}/etc/rcS.d
+	ln -s ${sysconfdir}/init.d/aesdsocket ${D}/etc/rcS.d/S99aesdsocket
 }
